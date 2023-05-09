@@ -1,0 +1,83 @@
+import csv
+import os
+import pandas as pd
+
+def CreateCSVFile():
+    header_row = ["Week Number", "Ben Rent Paid", "Noelle Rent Paid", "Tyler Rent Paid", "Katya Rent Paid", "Rachel Rent Paid", "Grocery Bill total"]
+
+    file_name = "data.csv"
+    folder_path = "D:\Python stuff\Projects\FinanceManager"
+
+    file_path = os.path.join(folder_path, file_name)
+
+    # Check if the file exists
+    if os.path.exists(file_path):
+        return
+
+    with open(file_path, mode="w", newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow(header_row)
+
+    print(f"A new CSV file named {file_name} has been created.")
+
+
+def AddWeekDataToFile(week_number, ben_rent, noelle_rent, tyler_rent, katya_rent, rachel_rent, grocery_cost):
+
+    CreateCSVFile()
+
+    file_name = "data.csv"
+    folder_path = "D:\Python stuff\Projects\FinanceManager"
+
+    file_path = os.path.join(folder_path, file_name)
+
+    data = [week_number, ben_rent, noelle_rent, tyler_rent, katya_rent, rachel_rent, grocery_cost]
+
+    with open(file_path, mode="a", newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow(data)
+
+    print(f"Data successfully added to {file_name}.")
+
+
+def LastRecordedEntry():
+    with open('data.csv', 'r') as file:
+        reader = csv.reader(file)
+        rows = list(reader)
+        try:
+            last_row = rows[-1]
+        except Exception:
+            return -999
+        return int(last_row[0])
+
+
+def CSVToXL():
+
+    file_name = "data.xlsx"
+    folder_path = "D:\Python stuff\Projects\FinanceManager"
+
+    file_path = os.path.join(folder_path, file_name)
+
+    # Check if the file exists
+    if os.path.exists(file_path):
+        try:
+            os.remove(file_path)
+            print(f"File '{file_path}' has been deleted successfully.")
+        except FileNotFoundError:
+            print(f"File '{file_path}' does not exist.")
+        except PermissionError:
+            print(f"You do not have permission to delete the file '{file_path}'.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    df = pd.read_csv('data.csv')
+
+    # Create a writer object to save the DataFrame to an Excel file
+    writer = pd.ExcelWriter(file_path)
+
+    # Convert the DataFrame to an Excel sheet named 'Sheet1'
+    df.to_excel(writer, sheet_name='Sheet1', index=False)
+
+    # Save the Excel file
+    writer.save()
+
+    print("Excel file created successfully.")
