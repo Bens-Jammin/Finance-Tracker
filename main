@@ -1,0 +1,31 @@
+from datetime import date
+import CSVManager as csvm
+
+def getWeekNumber():
+    return int(date.today().isocalendar()[1])
+
+def main():
+    csvm.CreateCSVFile()
+
+    week_num = getWeekNumber()
+    if week_num == csvm.LastRecordedEntry():
+        print("You already recorded data for this week!!")
+        return
+    
+    print(csvm.LastRecordedEntry(), week_num)
+
+    ben_rent = True if input("Did Ben pay rent this month already? ").lower() == 'yes' else False
+    noelle_rent = True if input("Did Noelle pay rent this month already? ").lower() == 'yes' else False
+    tyler_rent = True if input("Did Tyler pay rent this month already? ").lower() == 'yes' else False
+    katya_rent = True if input("Did Katya pay rent this month already? ").lower() == 'yes' else False
+    rachel_rent = True if input("Did Rachel pay rent this month already? ").lower() == 'yes' else False
+
+    grocery_bill = int(input("Enter this weeks grocery bill amount: "))
+
+    csvm.AddWeekDataToFile(week_num, ben_rent, noelle_rent, tyler_rent, katya_rent, rachel_rent, grocery_bill)
+
+    # csvm.CSVToXL()
+
+
+if __name__ == "__main__":
+    main()
